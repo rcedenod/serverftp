@@ -1,0 +1,61 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cliente FTP</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>Cliente FTP</h1>
+  
+  <section id="upload">
+    <h2>Subir Archivo</h2>
+    <form id="uploadForm" enctype="multipart/form-data">
+      <input type="file" name="file" id="fileInput" required>
+      <button type="submit">Subir</button>
+    </form>
+    <div id="uploadResult"></div>
+  </section>
+  
+  <section id="download">
+    <h2>Descargar Archivo</h2>
+    <form id="downloadForm">
+      <input type="text" name="filename" id="filenameInput" placeholder="Nombre del archivo" required>
+      <button type="submit">Descargar</button>
+    </form>
+    <div id="downloadResult"></div>
+  </section>
+  
+  <script>
+    // Manejo del envío del formulario de subida
+    document.getElementById('uploadForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const formData = new FormData();
+      const fileInput = document.getElementById('fileInput');
+      if(fileInput.files.length === 0) return;
+      formData.append('file', fileInput.files[0]);
+      
+      fetch('/upload', {
+        method: 'POST',
+        body: formData
+      }).then(response => response.text())
+        .then(data => {
+          document.getElementById('uploadResult').innerText = data;
+        }).catch(err => {
+          document.getElementById('uploadResult').innerText = 'Error: ' + err;
+        });
+    });
+    
+    // Manejo del formulario de descarga
+    document.getElementById('downloadForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const filename = document.getElementById('filenameInput').value;
+      if (!filename) return;
+      
+      // Redirige al endpoint de descarga para que el navegador inicie la descarga
+      window.location.href = '/download/' + encodeURIComponent(filename);
+    });
+  </script>
+</body>
+</html>
