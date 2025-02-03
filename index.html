@@ -35,8 +35,10 @@
       const fileInput = document.getElementById('fileInput');
       if(fileInput.files.length === 0) return;
       formData.append('file', fileInput.files[0]);
-      
-      fetch('/upload', {
+
+      console.log('formData: ', formData)
+
+      fetch('http://localhost:3000/upload', {
         method: 'POST',
         body: formData
       }).then(response => response.text())
@@ -53,8 +55,10 @@
       const filename = document.getElementById('filenameInput').value;
       if (!filename) return;
       
+      console.log("encodeURIComponent: " + filename)
+      
       // Redirige al endpoint de descarga para que el navegador inicie la descarga
-      window.location.href = '/download/' + encodeURIComponent(filename);
+      window.location.href = 'http://localhost:3000/download/' + encodeURIComponent(filename);
     });
   </script>
 </body>
